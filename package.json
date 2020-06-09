@@ -1,6 +1,6 @@
 {
   "name": "react-ob",
-  "version": "0.5.0",
+  "version": "0.7.0",
   "main": "umd/index.js",
   "types": "umd/index.d.ts",
   "private": false,
@@ -23,7 +23,6 @@
   },
   "homepage": "git+https://github.com/ymzuiku/react-ob.git",
   "dependencies": {
-    "immer": "^6.0.5",
     "react": "^16.13.1",
     "tiny-subject": "^1.1.0"
   }
