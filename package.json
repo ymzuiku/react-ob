@@ -1,6 +1,6 @@
 {
   "name": "react-ob",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "main": "umd/index.js",
   "types": "umd/index.d.ts",
   "private": false,
@@ -22,8 +22,5 @@
   "bugs": {
     "url": "git+https://github.com/ymzuiku/react-ob.git"
   },
-  "homepage": "git+https://github.com/ymzuiku/react-ob.git",
-  "dependencies": {
-    "tiny-subject": "^1.1.0"
-  }
+  "homepage": "git+https://github.com/ymzuiku/react-ob.git"
 }

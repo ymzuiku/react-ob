@@ -312,11 +312,6 @@ supports-color@^6.1.0:
   dependencies:
     has-flag "^3.0.0"
 
-tiny-subject@^1.1.0:
-  version "1.1.0"
-  resolved "https://registry.yarnpkg.com/tiny-subject/-/tiny-subject-1.1.0.tgz#abd37932e420d8f3d4ce11f3be511c5ab682393c"
-  integrity sha512-WJwafH0fKDFBaXzpdMHK2ar0nssu/fvJ2R1/hnARMX/iUrNadFN70VgbKXT3e2BcDR6H5QMZj+MglwDHAsYTVA==
-
 tslib@1.10.0:
   version "1.10.0"
   resolved "https://registry.yarnpkg.com/tslib/-/tslib-1.10.0.tgz#c3c19f95973fb0a62973fb09d90d961ee43e5c8a"
