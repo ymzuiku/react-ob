@@ -52,6 +52,26 @@ const watchOptions = [
       }),
     ],
   },
+  {
+    input: './lib/preact.ts',
+    output: {
+      file: './umd/preact.js',
+      format: 'umd',
+      name: 'Ob',
+      sourcemap: true,
+      // globals: {
+      //   keyframesSpring: 'keyframes-spring',
+      // },
+    },
+    plugins: [
+      rollupTypescript({
+        useTsconfigDeclarationDir: false,
+      }),
+      uglify({
+        sourcemap: true,
+      }),
+    ],
+  },
 ];
 const watcher = rollup.watch(watchOptions);
 

@@ -4,6 +4,8 @@
 
 > Use typescript
 
+> Allow React and Preact
+
 ## Install
 
 ```sh
@@ -16,6 +18,8 @@ $ npm install --save react-ob
 
 ```js
 import Ob from "react-ob";
+// if use preact
+// import Ob from "react-ob/preact";
 
 const useOb = Ob(
   { name: "dog", age: 20 },
