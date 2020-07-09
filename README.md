@@ -4,12 +4,12 @@
 
 > Use typescript
 
-> Allow React and Preact
-
 ## Install
 
 ```sh
 $ npm install --save react-ob
+# If use preact:
+$ npm install --save preact-ob
 ```
 
 ## Simple Example
@@ -19,12 +19,11 @@ $ npm install --save react-ob
 ```js
 import Ob from "react-ob";
 // if use preact
-// import Ob from "react-ob/preact";
 
-const useOb = Ob(
+const HumanOb = Ob(
   { name: "dog", age: 20 },
   {
-    addAge: (n) => {
+    addAge: (n = 1) => {
       useOb.set((s) => (s.age += n));
     },
   }
@@ -34,37 +33,55 @@ const useOb = Ob(
 // create index.jsx
 
 ```js
-import useOb from "./useOb";
+import HumanOb from "./HumanOb";
 
 export default () => {
-  const data = useOb();
+  const state = HumanOb.useState();
 
   console.log("rerender at button click");
 
   return (
     <div>
-      <h2>age: {data.age}</h2>
-      <button onClick={() => data.fn.addAge(5)}>add num</button>
+      <h2>age: {state.age}</h2>
+      <button onClick={() => HumanOb.fn.addAge(5)}>add num</button>
     </div>
   );
 };
 ```
 
-// A component:
+## Use Memo by state
 
 ```js
-import useOb from "./useOb";
+import HumanOb from "./HumanOb";
 
 export default () => {
   // only update at s.name change:
-  const data = useOb((s) => [s.name]);
+  const state = HumanOb.useState((s) => [s.name]);
 
   console.log("render once");
 
   return (
     <div>
-      <h2>name: {data.name}</h2>
-      <button onClick={() => data.fn.addAge(5)}>add num</button>
+      <h2>name: {state.name}</h2>
+      <button onClick={() => HumanOb.fn.addAge(5)}>add num</button>
+    </div>
+  );
+};
+```
+
+## Use Consumer style
+
+```js
+import HumanOb from "./HumanOb";
+
+export default () => {
+  console.log("render once");
+  return (
+    <div>
+      <h2>hello</h2>
+      <!-- only rerender this Element -->
+      <HumanOb>{(state) => <div>{state.age}</div>}</HumanOb>
+      <button onClick={HumanOb.fn.addAge}>add Humber</button>
     </div>
   );
 };

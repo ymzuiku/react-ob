@@ -1,20 +1,43 @@
 import { useState, useEffect } from "react";
+
 import TinySubject from "tiny-subject";
 
-export interface UseOBOptions<A> {
-  actions?: A;
-  immer?: any;
+export interface ConsumerProps<T> {
+  key?:any;
+  ref?:any;
+  meno?: (s:T)=> any[];
+  children:(s:T)=>any;
 }
+
+const libray = {
+  immer:null as any
+}
+
+export function allowImmer(immer:any){
+  libray.immer = immer;
+}
+
+
+type IUseObFn<T> = (props:ConsumerProps<T>)=> any
+
+export interface UseObser<T,A> extends IUseObFn<T> {
+  get:()=>T;
+  set:(fn:(v:T)=>any)=>any;
+  next:()=>any;
+  useState: (memo?: (s: T) => any[], autoFn?: Function[])=> T;
+  fn:A;
+}
+
+
 
 export default function reactOb<T, A>(
   initState: T,
-  options: UseOBOptions<A> = {}
-) {
-  const { actions = {}, immer } = options;
+  actions: A,
+):UseObser<T, A> {
   const subject = new TinySubject(initState);
   type Updater = (s: T) => any;
 
-  function useOb(memo?: (s: T) => any[], autoFn?: Function[]): T {
+  function use(memo?: (s: T) => any[], autoFn?: Function[]): T {
     const [state, setState] = useState(subject.state);
 
     useEffect(() => {
@@ -46,6 +69,11 @@ export default function reactOb<T, A>(
     return state;
   }
 
+  const useOb = function Consumer({ children }: ConsumerProps<T>) {
+    const ob = use();
+    return children(ob)
+  }
+
   const baseState = JSON.parse(JSON.stringify(initState));
 
   useOb.getBaseState = (): T => {
@@ -55,8 +83,8 @@ export default function reactOb<T, A>(
   useOb.get = () => subject.state;
 
   useOb.set = function (fn: Updater) {
-    if (immer) {
-      subject.state = immer(subject.state, (draft: T) => {
+    if (libray.immer) {
+      subject.state = libray.immer(subject.state, (draft: T) => {
         fn(draft as any);
       });
     } else {
@@ -69,6 +97,9 @@ export default function reactOb<T, A>(
   useOb.next = () => useOb.set(() => {});
 
   useOb.fn = actions as A;
+  useOb.useState = use;
+
+  
 
   return useOb;
 }
