@@ -28,8 +28,6 @@ export interface UseObser<T,A> extends IUseObFn<T> {
   fn:A;
 }
 
-
-
 export default function reactOb<T, A>(
   initState: T,
   actions: A,
@@ -98,8 +96,6 @@ export default function reactOb<T, A>(
 
   useOb.fn = actions as A;
   useOb.useState = use;
-
-  
 
   return useOb;
 }
