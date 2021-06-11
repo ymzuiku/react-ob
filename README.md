@@ -24,7 +24,7 @@ const HumanOb = Ob(
   { name: "dog", age: 20 },
   {
     addAge: (n = 1) => {
-      useOb.set((s) => (s.age += n));
+      HumanOb.set((s) => (s.age += n));
     },
   }
 );
