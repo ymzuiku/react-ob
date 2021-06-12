@@ -68,7 +68,7 @@ export function Subject<T>(initState:T) {
 export interface ConsumerProps<T> {
   key?:any;
   ref?:any;
-  meno?: (s:T)=> any[];
+  meno: (s:T)=> any[];
   children:(s:T)=>any;
 }
 
@@ -87,7 +87,7 @@ export interface UseObser<T,A> extends IUseObFn<T> {
   get:()=>T;
   set:(fn:(v:T)=>any)=>any;
   next:()=>any;
-  useState: (memo?: (s: T) => any[], autoFn?: Function[])=> T;
+  useState: (memo: (s: T) => any[], autoFn?: Function[])=> T;
   fn:A;
 }
 
@@ -100,7 +100,7 @@ export default function reactOb<T, A>(
   const subject = Subject(initState);
   type Updater = (s: T) => any;
 
-  function use(memo?: (s: T) => any[], autoFn?: Function[]): T {
+  function use(memo: (s: T) => any[], autoFn?: Function[]): T {
     const [state, setState] = useState(subject.state);
 
     useEffect(() => {
@@ -132,8 +132,8 @@ export default function reactOb<T, A>(
     return state;
   }
 
-  const useOb = function Consumer({ children }: ConsumerProps<T>) {
-    const ob = use();
+  const useOb = function Consumer({ children, meno }: ConsumerProps<T>) {
+    const ob = use(meno);
     return children(ob)
   }
 

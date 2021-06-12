@@ -30,26 +30,10 @@ const HumanOb = Ob(
 );
 ```
 
-// create index.jsx
-
-```js
-import HumanOb from "./HumanOb";
-
-export default () => {
-  const state = HumanOb.useState();
-
-  console.log("rerender at button click");
-
-  return (
-    <div>
-      <h2>age: {state.age}</h2>
-      <button onClick={() => HumanOb.fn.addAge(5)}>add num</button>
-    </div>
-  );
-};
-```
 
 ## Use Memo by state
+
+// create index.jsx
 
 ```js
 import HumanOb from "./HumanOb";
@@ -80,7 +64,7 @@ export default () => {
     <div>
       <h2>hello</h2>
       <!-- only rerender this Element -->
-      <HumanOb>{(state) => <div>{state.age}</div>}</HumanOb>
+      <HumanOb memo={s=>[s.age]}>{(state) => <div>{state.age}</div>}</HumanOb>
       <button onClick={HumanOb.fn.addAge}>add Humber</button>
     </div>
   );

@@ -13,7 +13,7 @@ export declare function Subject<T>(initState: T): {
 export interface ConsumerProps<T> {
     key?: any;
     ref?: any;
-    meno?: (s: T) => any[];
+    meno: (s: T) => any[];
     children: (s: T) => any;
 }
 export declare function allowImmer(immer: any): void;
@@ -22,7 +22,7 @@ export interface UseObser<T, A> extends IUseObFn<T> {
     get: () => T;
     set: (fn: (v: T) => any) => any;
     next: () => any;
-    useState: (memo?: (s: T) => any[], autoFn?: Function[]) => T;
+    useState: (memo: (s: T) => any[], autoFn?: Function[]) => T;
     fn: A;
 }
 export default function reactOb<T, A>(initState: T, actions: A): UseObser<T, A>;
