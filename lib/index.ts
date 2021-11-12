@@ -1,128 +1,36 @@
 import { useState, useEffect } from "react";
+import immer from "immer";
+import { Subject } from "./Subscribe";
 
-export interface TinySubscribe<T> {
-  unsubscribe: () => TinySubscribe<T>;
-  next: (state?: T) => TinySubscribe<T>;
-}
+type IUseObFn<T> = (props: ConsumerProps<T>) => any;
 
-export function Subject<T>(initState:T) {
-  const ref = {
-    state:initState, 
-    events:[] as Function[],
-    next: (state?: T) => {
-      ref.events.forEach((fn) => {
-        fn(state || ref.state);
-      });
-    },
-    setState: (fn: (state: T) => any) => {
-      fn(ref.state);
-      ref.next(ref.state);
-    },
-    subscribe: (fn: (state: T) => any): TinySubscribe<T> => {
-      ref.events.push(fn);
-      const scribe = {
-        unsubscribe: () => {
-          const nextEvents: Function[] = [];
-          ref.events.forEach((v) => {
-            if (v !== fn) {
-              nextEvents.push(v);
-            }
-          });
-          ref.events = nextEvents;
-          return scribe;
-        },
-        next: (state?: T) => {
-          fn(state || ref.state);
-          return scribe;
-        },
-      };
-  
-      return scribe;
-    },
-  
-    subscribeMemo : (memo: (state: T) => any[], fn: (state: T) => any) => {
-      let last = ref.state ? memo(ref.state) : [];
-      const len = last.length;
-      const sub = ref.subscribe((theState) => {
-        const current = memo(theState);
-        let isKeep = true;
-        for (let i = 0; i < len; i++) {
-          if (current[i] !== last[i]) {
-            isKeep = false;
-            break;
-          }
-        }
-        if (isKeep) {
-          return;
-        }
-        fn(theState);
-        last = current;
-      });
-      sub.next = (s) => fn(s || ref.state);
-      return sub;
-    }
-  }
-  return ref;
+export interface UseObser<T, A> extends IUseObFn<T> {
+  baseState: () => T;
+  state: () => T;
+  // next: (fn: (v: T) => any) => any;
+  useState: (memo: (s: T) => any[]) => T;
+  actions: A;
 }
 
 export interface ConsumerProps<T> {
-  key?:any;
-  ref?:any;
-  meno: (s:T)=> any[];
-  children:(s:T)=>any;
+  key?: any;
+  ref?: any;
+  memo: (s: T) => any[];
+  children: (s: T) => any;
 }
-
-const libray = {
-  immer:null as any
-}
-
-export function allowImmer(immer:any){
-  libray.immer = immer;
-}
-
-
-type IUseObFn<T> = (props:ConsumerProps<T>)=> any
-
-export interface UseObser<T,A> extends IUseObFn<T> {
-  get:()=>T;
-  set:(fn:(v:T)=>any)=>any;
-  next:()=>any;
-  useState: (memo: (s: T) => any[], autoFn?: Function[])=> T;
-  fn:A;
-}
-
-
 
 export default function reactOb<T, A>(
   initState: T,
-  actions: A,
-):UseObser<T, A> {
+  setActions: (next: (fn: (v: T) => any) => any) => A
+) {
   const subject = Subject(initState);
-  type Updater = (s: T) => any;
 
-  function use(memo: (s: T) => any[], autoFn?: Function[]): T {
+  function useOb(memo: (s: T) => any[]): T {
     const [state, setState] = useState(subject.state);
 
     useEffect(() => {
-      if (autoFn) {
-        autoFn.forEach(async (fn) => {
-          const backFn = await Promise.resolve(fn);
-          if (typeof backFn === "function") {
-            backFn();
-          }
-        });
-      }
       let unsub: any;
-
-      if (memo) {
-        unsub = subject.subscribeMemo(memo, (s) => {
-          setState(s);
-        });
-      } else {
-        unsub = subject.subscribe((s) => {
-          setState(s);
-        });
-      }
+      unsub = subject.subscribeMemo(memo, setState);
 
       return () => {
         unsub.unsubscribe();
@@ -132,37 +40,26 @@ export default function reactOb<T, A>(
     return state;
   }
 
-  const useOb = function Consumer({ children, meno }: ConsumerProps<T>) {
-    const ob = use(meno);
-    return children(ob)
-  }
-
-  const baseState = JSON.parse(JSON.stringify(initState));
-
-  useOb.getBaseState = (): T => {
-    return JSON.parse(JSON.stringify(baseState));
-  };
-
-  useOb.get = () => subject.state;
-
-  useOb.set = function (fn: Updater) {
-    if (libray.immer) {
-      subject.state = libray.immer(subject.state, (draft: T) => {
-        fn(draft as any);
-      });
-    } else {
-      fn(subject.state);
-      subject.state = { ...subject.state };
-    }
+  function next(fn: (s: T) => any) {
+    subject.state = immer(subject.state, (draft: T) => {
+      fn(draft as any);
+    });
 
     subject.next();
+  }
+
+  const baseStateTxt = JSON.stringify(initState);
+
+  function Consumer({ children, memo }: ConsumerProps<T>) {
+    return children(useOb(memo));
+  }
+  // Consumer.next = next;
+  Consumer.actions = setActions(next);
+  Consumer.state = () => subject.state;
+  Consumer.baseState = (): T => {
+    return JSON.parse(baseStateTxt);
   };
-  useOb.next = () => useOb.set(() => {});
+  Consumer.useState = useOb;
 
-  useOb.fn = actions as A;
-  useOb.useState = use;
-
-  
-
-  return useOb;
+  return Consumer;
 }

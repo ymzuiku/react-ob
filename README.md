@@ -8,46 +8,43 @@
 
 ```sh
 $ npm install --save react-ob
-# If use preact:
-$ npm install --save preact-ob
 ```
 
 ## Simple Example
 
-// create useOb.js
+// create Ob.js
 
 ```js
-import Ob from "react-ob";
+import reactOb from "react-ob";
 // if use preact
 
-const HumanOb = Ob(
+const Ob = reactOb(
   { name: "dog", age: 20 },
-  {
+  (next)=>{
     addAge: (n = 1) => {
-      HumanOb.set((s) => (s.age += n));
+      next((s) => (s.age += n));
     },
   }
 );
 ```
-
 
 ## Use Memo by state
 
 // create index.jsx
 
 ```js
-import HumanOb from "./HumanOb";
+import Ob from "./Ob";
 
 export default () => {
   // only update at s.name change:
-  const state = HumanOb.useState((s) => [s.name]);
+  const state = Ob.useState((s) => [s.name]);
 
   console.log("render once");
 
   return (
     <div>
       <h2>name: {state.name}</h2>
-      <button onClick={() => HumanOb.fn.addAge(5)}>add num</button>
+      <button onClick={() => Ob.fn.addAge(5)}>add num</button>
     </div>
   );
 };
@@ -56,7 +53,7 @@ export default () => {
 ## Use Consumer style
 
 ```js
-import HumanOb from "./HumanOb";
+import Ob from "./Ob";
 
 export default () => {
   console.log("render once");
@@ -64,8 +61,8 @@ export default () => {
     <div>
       <h2>hello</h2>
       <!-- only rerender this Element -->
-      <HumanOb memo={s=>[s.age]}>{(state) => <div>{state.age}</div>}</HumanOb>
-      <button onClick={HumanOb.fn.addAge}>add Humber</button>
+      <Ob memo={s=>[s.age]}>{(state) => <div>{state.age}</div>}</Ob>
+      <button onClick={Ob.actions.addAge}>add Humber</button>
     </div>
   );
 };
