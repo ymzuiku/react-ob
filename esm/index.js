@@ -4,7 +4,7 @@ import immer from 'immer';
 function Subject(initState) {
     var ref = {
         state: initState,
-        events: [],
+        events: new Set([]),
         next: function (state) {
             ref.events.forEach(function (fn) {
                 fn(state || ref.state);
@@ -15,16 +15,10 @@ function Subject(initState) {
             ref.next(ref.state);
         },
         subscribe: function (fn) {
-            ref.events.push(fn);
+            ref.events.add(fn);
             var scribe = {
                 unsubscribe: function () {
-                    var nextEvents = [];
-                    ref.events.forEach(function (v) {
-                        if (v !== fn) {
-                            nextEvents.push(v);
-                        }
-                    });
-                    ref.events = nextEvents;
+                    ref.events.delete(fn);
                     return scribe;
                 },
                 next: function (state) {

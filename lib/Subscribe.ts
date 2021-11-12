@@ -6,7 +6,7 @@ export interface TinySubscribe<T> {
 export function Subject<T>(initState: T) {
   const ref = {
     state: initState,
-    events: [] as Function[],
+    events: new Set<Function>([]),
     next: (state?: T) => {
       ref.events.forEach((fn) => {
         fn(state || ref.state);
@@ -17,16 +17,10 @@ export function Subject<T>(initState: T) {
       ref.next(ref.state);
     },
     subscribe: (fn: (state: T) => any): TinySubscribe<T> => {
-      ref.events.push(fn);
+      ref.events.add(fn);
       const scribe = {
         unsubscribe: () => {
-          const nextEvents: Function[] = [];
-          ref.events.forEach((v) => {
-            if (v !== fn) {
-              nextEvents.push(v);
-            }
-          });
-          ref.events = nextEvents;
+          ref.events.delete(fn);
           return scribe;
         },
         next: (state?: T) => {
