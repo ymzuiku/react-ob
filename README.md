@@ -44,7 +44,7 @@ export default () => {
   return (
     <div>
       <h2>name: {state.name}</h2>
-      <button onClick={() => Ob.fn.addAge(5)}>add num</button>
+      <button onClick={() => Ob.actions.addAge(5)}>add num</button>
     </div>
   );
 };
