@@ -30,8 +30,6 @@ const Ob = reactOb(
 
 ## Use Memo by state
 
-// create index.jsx
-
 ```js
 import Ob from "./Ob";
 
