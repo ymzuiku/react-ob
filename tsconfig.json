@@ -22,9 +22,7 @@
     "noResolve": false,
     "noEmit": true,
     "inlineSourceMap": false,
-    "declaration": false,
     "outDir": "./umd",
-    "declarationDir": "./",
     "jsx": "react"
   },
   "exclude": [

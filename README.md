@@ -1,8 +1,11 @@
 # react-ob
 
-> Use react-hooks ad observer, use immer create immertable global state
-
-> Use typescript
+- Olny 0.4kb(gzip)
+- Only 3 API:
+  - useOb
+  - useOb.ob
+  - useOb.next
+- Use typescript
 
 ## Install
 
@@ -10,39 +13,41 @@
 $ npm install --save react-ob
 ```
 
-## Simple Example
-
-// create Ob.js
+## Use Hooks style
 
 ```js
 import reactOb from "react-ob";
-// if use preact
 
-const Ob = reactOb(
-  { name: "dog", age: 20 },
-  (next)=>{
-    addAge: (n = 1) => {
-      next((s) => (s.age += n));
-    },
-  }
-);
-```
+const useOb = reactOb({ age: 5, text: "hello" });
 
-## Use Memo by state
+const Button = () => {
+  // only update when s.age change
+  const { age } = useOb((s) => [s.age]);
+  return (
+    <button
+      onClick={() => {
+        useOb.state.age += 1;
+        useOb.next();
+      }}
+    >
+      add num
+    </button>
+  );
+};
 
-```js
-import Ob from "./Ob";
-
-export default () => {
-  // only update at s.name change:
-  const state = Ob.useState((s) => [s.name]);
-
-  console.log("render once");
-
+const Input = () => {
+  // only update when s.text change
+  const { text } = useOb((s) => [s.text]);
   return (
     <div>
-      <h2>name: {state.name}</h2>
-      <button onClick={() => Ob.actions.addAge(5)}>add num</button>
+      <div>{text}</div>
+      <input
+        placeholder="inputA..."
+        onInput={(e) => {
+          useOb.state.text = e.currentTarget.value;
+          useOb.next();
+        }}
+      />
     </div>
   );
 };
@@ -51,16 +56,21 @@ export default () => {
 ## Use Consumer style
 
 ```js
-import Ob from "./Ob";
+import reactOb from "react-ob";
+
+const useOb = reactOb({ text: "please input" });
 
 export default () => {
-  console.log("render once");
   return (
     <div>
-      <h2>hello</h2>
-      <!-- only rerender this Element -->
-      <Ob memo={s=>[s.age]}>{(state) => <div>{state.age}</div>}</Ob>
-      <button onClick={Ob.actions.addAge}>add Humber</button>
+      <useOb.ob memo={(s) => [s.text]} render={(s) => <div>{s.text}</div>} />
+      <input
+        placeholder="inputA..."
+        onInput={(e) => {
+          useOb.state.text = e.currentTarget.value;
+          useOb.next();
+        }}
+      />
     </div>
   );
 };
