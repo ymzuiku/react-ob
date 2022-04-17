@@ -3,51 +3,59 @@ import { useEffect, useRef, useState } from "react";
 export interface ConsumerProps<T> {
   key?: unknown;
   ref?: unknown;
+  data: Ob<T>;
   memo: (s: T) => unknown[];
   render: (s: T) => JSX.Element;
 }
 
-export function reactOb<T>(initState: T) {
+interface Ob<T> {
+  val: T;
+  next: () => void;
+  subscribs: Set<() => void>;
+}
+
+export function useOb<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
+  const [nextState, setState] = useState(data.val);
+  const ref = useRef(memo(data.val));
+
+  useEffect(() => {
+    const fn = () => {
+      let needUpdate = false;
+      const list = memo(data.val);
+
+      for (let i = 0; i < list.length; i++) {
+        if (list[i] !== ref.current[i]) {
+          needUpdate = true;
+          break;
+        }
+      }
+      ref.current = list;
+      if (needUpdate) {
+        setState({ ...data.val });
+      }
+    };
+    data.subscribs.add(fn);
+    return () => {
+      data.subscribs.delete(fn);
+    };
+  }, []);
+
+  return nextState;
+}
+
+export function Ober<T>({ data, render, memo }: ConsumerProps<T>) {
+  const state = useOb(data, memo);
+  return render(state);
+}
+
+export function Ob<T>(initState: T) {
   const fns = new Set<() => void>();
-  function useOb(memo: (s: T) => unknown[]): T {
-    const [nextState, setState] = useState(useOb.state);
-    const ref = useRef(memo(useOb.state));
 
-    useEffect(() => {
-      const fn = () => {
-        const list = memo(useOb.state);
-
-        let needUpdate = false;
-        for (let i = 0; i < list.length; i++) {
-          if (list[i] !== ref.current[i]) {
-            needUpdate = true;
-            break;
-          }
-        }
-        ref.current = list;
-        if (needUpdate) {
-          setState({ ...useOb.state });
-        }
-      };
-      fns.add(fn);
-      return () => {
-        fns.delete(fn);
-      };
-    }, []);
-
-    return nextState;
-  }
-
-  function Ob({ render, memo }: ConsumerProps<T>) {
-    const state = useOb(memo);
-    return render(state);
-  }
-
-  useOb.next = () => {
-    fns.forEach((fn) => fn());
+  return {
+    subscribs: fns,
+    next: () => {
+      fns.forEach((fn) => fn());
+    },
+    val: initState,
   };
-  useOb.state = initState;
-  useOb.ob = Ob;
-
-  return useOb;
 }

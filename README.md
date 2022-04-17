@@ -1,10 +1,11 @@
 # react-ob
 
 - Olny 0.4kb(gzip)
-- Only 3 API:
+- Only 4 API:
+  - Ob
   - useOb
-  - useOb.ob
-  - useOb.next
+  - Ober
+  - next
 - Use typescript
 
 ## Install
@@ -16,13 +17,13 @@ $ npm install --save react-ob
 ## Use Hooks style
 
 ```js
-import reactOb from "react-ob";
+import { Ob, UseOb } from "react-ob";
 
-const useOb = reactOb({ age: 5, text: "hello" });
+const data = Ob({ age: 5, text: "hello" });
 
 const Button = () => {
   // only update when s.age change
-  const { age } = useOb((s) => [s.age]);
+  const { age } = useOb(data, (s) => [s.age]);
   return (
     <button
       onClick={() => {
@@ -37,7 +38,7 @@ const Button = () => {
 
 const Input = () => {
   // only update when s.text change
-  const { text } = useOb((s) => [s.text]);
+  const { text } = useOb(data, (s) => [s.text]);
   return (
     <div>
       <div>{text}</div>
@@ -56,14 +57,18 @@ const Input = () => {
 ## Use Consumer style
 
 ```js
-import reactOb from "react-ob";
+import { Ob, Ober } from "react-ob";
 
-const useOb = reactOb({ text: "please input" });
+const data = Ob({ text: "please input" });
 
 export default () => {
   return (
     <div>
-      <useOb.ob memo={(s) => [s.text]} render={(s) => <div>{s.text}</div>} />
+      <Ober
+        data={data}
+        memo={(s) => [s.text]}
+        render={(s) => <div>{s.text}</div>}
+      />
       <input
         placeholder="inputA..."
         onInput={(e) => {
