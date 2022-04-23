@@ -27,7 +27,7 @@ const Button = () => {
   return (
     <button
       onClick={() => {
-        useObserver.next((s) => {
+        data.next((s) => {
           s.age += 1;
         });
       }}
@@ -46,8 +46,9 @@ const Input = () => {
       <input
         placeholder="inputA..."
         onInput={(e) => {
-          useOb.state.text = e.currentTarget.value;
-          useOb.next();
+          data.next((s) => {
+            s.text = e.currentTarget.value;
+          });
         }}
       />
     </div>
@@ -73,7 +74,7 @@ export default () => {
       <input
         placeholder="inputA..."
         onInput={(e) => {
-          useObserver.next((s) => {
+          data.next((s) => {
             s.text = e.currentTarget.value;
           });
         }}
