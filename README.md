@@ -27,8 +27,9 @@ const Button = () => {
   return (
     <button
       onClick={() => {
-        useObserver.state.age += 1;
-        useObserver.next();
+        useObserver.next((s) => {
+          s.age += 1;
+        });
       }}
     >
       add num
@@ -72,8 +73,9 @@ export default () => {
       <input
         placeholder="inputA..."
         onInput={(e) => {
-          useOb.state.text = e.currentTarget.value;
-          useOb.next();
+          useObserver.next((s) => {
+            s.text = e.currentTarget.value;
+          });
         }}
       />
     </div>

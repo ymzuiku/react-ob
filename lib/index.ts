@@ -10,7 +10,7 @@ export interface ConsumerProps<T> {
 
 interface Ob<T> {
   val: T;
-  next: () => void;
+  next: (fn?: (state: T) => void) => void;
   subscribs: Set<() => void>;
 }
 
@@ -51,11 +51,18 @@ export function Consumer<T>({ data, render, memo }: ConsumerProps<T>) {
 export function Observer<T>(initState: T) {
   const fns = new Set<() => void>();
 
-  return {
+  const out = {
     subscribs: fns,
-    next: () => {
-      fns.forEach((fn) => fn());
+    next: (fn?: (s: T) => void) => {
+      if (fn) {
+        Promise.resolve(fn(out.val)).then(() => {
+          fns.forEach((fn) => fn());
+        });
+      } else {
+        fns.forEach((fn) => fn());
+      }
     },
     val: initState,
   };
+  return out;
 }
