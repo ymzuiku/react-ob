@@ -14,7 +14,7 @@ interface Ob<T> {
   subscribs: Set<() => void>;
 }
 
-export function useOb<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
+export function useObserver<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
   const [nextState, setState] = useState(data.val);
   const ref = useRef(memo(data.val));
 
@@ -43,12 +43,12 @@ export function useOb<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
   return nextState;
 }
 
-export function Ober<T>({ data, render, memo }: ConsumerProps<T>) {
-  const state = useOb(data, memo);
+export function Consumer<T>({ data, render, memo }: ConsumerProps<T>) {
+  const state = useObserver(data, memo);
   return render(state);
 }
 
-export function Ob<T>(initState: T) {
+export function Observer<T>(initState: T) {
   const fns = new Set<() => void>();
 
   return {

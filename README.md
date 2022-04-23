@@ -2,9 +2,9 @@
 
 - Olny 0.4kb(gzip)
 - Only 4 API:
-  - Ob
-  - useOb
-  - Ober
+  - Observer
+  - useObserver
+  - Consumer
   - next
 - Use typescript
 
@@ -17,18 +17,18 @@ $ npm install --save react-ob
 ## Use Hooks style
 
 ```js
-import { Ob, UseOb } from "react-ob";
+import { Observer, UseObserver } from "react-ob";
 
-const data = Ob({ age: 5, text: "hello" });
+const data = Observer({ age: 5, text: "hello" });
 
 const Button = () => {
   // only update when s.age change
-  const { age } = useOb(data, (s) => [s.age]);
+  const { age } = useObserver(data, (s) => [s.age]);
   return (
     <button
       onClick={() => {
-        useOb.state.age += 1;
-        useOb.next();
+        useObserver.state.age += 1;
+        useObserver.next();
       }}
     >
       add num
@@ -38,7 +38,7 @@ const Button = () => {
 
 const Input = () => {
   // only update when s.text change
-  const { text } = useOb(data, (s) => [s.text]);
+  const { text } = useObserver(data, (s) => [s.text]);
   return (
     <div>
       <div>{text}</div>
@@ -57,14 +57,14 @@ const Input = () => {
 ## Use Consumer style
 
 ```js
-import { Ob, Ober } from "react-ob";
+import { Observer, Consumer } from "react-ob";
 
-const data = Ob({ text: "please input" });
+const data = Observer({ text: "please input" });
 
 export default () => {
   return (
     <div>
-      <Ober
+      <Consumer
         data={data}
         memo={(s) => [s.text]}
         render={(s) => <div>{s.text}</div>}
