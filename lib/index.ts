@@ -1,20 +1,27 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { isEqual } from "./isEqual";
+
+export { isEqual };
 
 export interface ConsumerProps<T> {
   key?: unknown;
   ref?: unknown;
-  data: Ob<T>;
+  data: ObControl<T>;
   memo: (s: T) => unknown[];
-  render: (s: T) => JSX.Element;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  children: (s: T) => any;
 }
 
-interface Ob<T> {
+export interface ObControl<T> {
   val: T;
   next: (fn?: (state: T) => void) => void;
   subscribs: Set<() => void>;
 }
 
-export function useObserver<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type ObControlAny = ObControl<any>;
+
+export function useObserver<T>(data: ObControl<T>, memo: (s: T) => unknown[]): T {
   const [nextState, setState] = useState(data.val);
   const ref = useRef(memo(data.val));
 
@@ -24,7 +31,7 @@ export function useObserver<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
       const list = memo(data.val);
 
       for (let i = 0; i < list.length; i++) {
-        if (list[i] !== ref.current[i]) {
+        if (isEqual(list[i], ref.current[i])) {
           needUpdate = true;
           break;
         }
@@ -43,12 +50,12 @@ export function useObserver<T>(data: Ob<T>, memo: (s: T) => unknown[]): T {
   return nextState;
 }
 
-export function Consumer<T>({ data, render, memo }: ConsumerProps<T>) {
+export function Consumer<T>({ data, children, memo }: ConsumerProps<T>) {
   const state = useObserver(data, memo);
-  return render(state);
+  return children(state);
 }
 
-export function Observer<T>(initState: T) {
+export function NewObserver<T>(initState: T): ObControl<T> {
   const fns = new Set<() => void>();
 
   const out = {
@@ -65,4 +72,8 @@ export function Observer<T>(initState: T) {
     val: initState,
   };
   return out;
+}
+
+export function useNewObserver<T>(data: T, memo: unknown[]) {
+  return useMemo(() => NewObserver(data), memo);
 }

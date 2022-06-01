@@ -1,14 +1,11 @@
 {
   "name": "react-ob",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "main": "umd/index.js",
   "types": "lib/index.ts",
   "exports": {
     "import": "./esm/index.js",
     "require": "./cjs/index.js"
-  },
-  "resolutions": {
-    "react": "17.0.2"
   },
   "private": false,
   "scripts": {
@@ -18,8 +15,8 @@
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "@types/react": "^17.0.34",
-    "react": "^17.0.2",
+    "@types/react": "^18.0.10",
+    "react": "^18.1.0",
     "tslib": "^2.3.1",
     "typescript": "^4.6.3"
   },
