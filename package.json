@@ -1,6 +1,6 @@
 {
   "name": "react-ob",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "main": "umd/index.js",
   "types": "lib/index.ts",
   "exports": {
@@ -12,8 +12,8 @@
   },
   "private": false,
   "scripts": {
-    "esm": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=esm --target=es6  --bundle --external:react --format=esm --minify --splitting",
-    "cjs": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=cjs --target=es6  --bundle --external:react --format=cjs --minify",
+    "esm": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=esm --target=es6  --bundle --inject:./react-shim.js --external:react --format=esm --minify --splitting",
+    "cjs": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=cjs --target=es6  --bundle --inject:./react-shim.js --external:react --format=cjs --minify",
     "build": "yarn esm && yarn cjs"
   },
   "devDependencies": {
