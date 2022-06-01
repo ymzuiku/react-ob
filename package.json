@@ -1,11 +1,14 @@
 {
   "name": "react-ob",
-  "version": "2.2.1",
+  "version": "2.2.2",
   "main": "umd/index.js",
   "types": "lib/index.ts",
   "exports": {
     "import": "./esm/index.js",
     "require": "./cjs/index.js"
+  },
+  "resolutions": {
+    "react": "17.0.2"
   },
   "private": false,
   "scripts": {
