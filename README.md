@@ -1,8 +1,8 @@
 # react-ob
 
 - Olny 0.4kb(gzip)
-- Only 4 API:
-  - Observer
+- Only 4 Core API:
+  - CreateObserver
   - useObserver
   - Consumer
   - next
@@ -17,9 +17,9 @@ $ npm install --save react-ob
 ## Use Hooks style
 
 ```js
-import { Observer, UseObserver } from "react-ob";
+import { CreateObserver, UseObserver } from "react-ob";
 
-const data = Observer({ age: 5, text: "hello" });
+const data = CreateObserver({ age: 5, text: "hello" });
 
 const Button = () => {
   // only update when s.age change
@@ -59,9 +59,9 @@ const Input = () => {
 ## Use Consumer style
 
 ```js
-import { Observer, Consumer } from "react-ob";
+import { CreateObserver, Consumer } from "react-ob";
 
-const data = Observer({ text: "please input" });
+const data = CreateObserver({ text: "please input" });
 
 export default () => {
   return (

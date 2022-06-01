@@ -55,7 +55,7 @@ export function Consumer<T>({ data, children, memo }: ConsumerProps<T>) {
   return children(state);
 }
 
-export function NewObserver<T>(initState: T): ObControl<T> {
+export function CreateObserver<T>(initState: T): ObControl<T> {
   const fns = new Set<() => void>();
 
   const out = {
@@ -74,6 +74,6 @@ export function NewObserver<T>(initState: T): ObControl<T> {
   return out;
 }
 
-export function useNewObserver<T>(data: T, memo: unknown[]) {
-  return useMemo(() => NewObserver(data), memo);
+export function useCreateObserver<T>(data: T, memo: unknown[]) {
+  return useMemo(() => CreateObserver(data), memo);
 }
