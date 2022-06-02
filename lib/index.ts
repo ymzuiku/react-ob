@@ -21,7 +21,10 @@ export interface ObControl<T> {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type ObControlAny = ObControl<any>;
 
-export function useObserver<T>(data: ObControl<T>, memo: (s: T) => unknown[]): T {
+export function useObserver<T>(
+  data: ObControl<T>,
+  memo: (s: T) => unknown[]
+): T {
   const [nextState, setState] = useState(data.val);
   const ref = useRef(memo(data.val));
 
@@ -31,7 +34,7 @@ export function useObserver<T>(data: ObControl<T>, memo: (s: T) => unknown[]): T
       const list = memo(data.val);
 
       for (let i = 0; i < list.length; i++) {
-        if (isEqual(list[i], ref.current[i])) {
+        if (!isEqual(list[i], ref.current[i])) {
           needUpdate = true;
           break;
         }
