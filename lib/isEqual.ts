@@ -5,7 +5,8 @@
 const hasElementType = typeof Element !== "undefined";
 const hasMap = typeof Map === "function";
 const hasSet = typeof Set === "function";
-const hasArrayBuffer = typeof ArrayBuffer === "function" && !!ArrayBuffer.isView;
+const hasArrayBuffer =
+  typeof ArrayBuffer === "function" && !!ArrayBuffer.isView;
 
 // Note: We **don't** need `envHasBigInt64Array` in fde es6/index.js
 
@@ -32,7 +33,8 @@ function equal(a: any, b: any) {
       it = a.entries();
       while (!(i = it.next()).done) if (!b.has(i.value[0])) return false;
       it = a.entries();
-      while (!(i = it.next()).done) if (!equal(i.value[1], b.get(i.value[0]))) return false;
+      while (!(i = it.next()).done)
+        if (!equal(i.value[1], b.get(i.value[0]))) return false;
       return true;
     }
 
@@ -47,20 +49,25 @@ function equal(a: any, b: any) {
     if (hasArrayBuffer && ArrayBuffer.isView(a) && ArrayBuffer.isView(b)) {
       length = (a as any).length;
       if (length != (b as any).length) return false;
-      for (i = length; i-- !== 0; ) if ((a as any)[i] !== (b as any)[i]) return false;
+      for (i = length; i-- !== 0; )
+        if ((a as any)[i] !== (b as any)[i]) return false;
       return true;
     }
 
-    if (a.constructor === RegExp) return a.source === b.source && a.flags === b.flags;
-    if (a.valueOf !== Object.prototype.valueOf) return a.valueOf() === b.valueOf();
-    if (a.toString !== Object.prototype.toString) return a.toString() === b.toString();
+    if (a.constructor === RegExp)
+      return a.source === b.source && a.flags === b.flags;
+    if (a.valueOf !== Object.prototype.valueOf)
+      return a.valueOf() === b.valueOf();
+    if (a.toString !== Object.prototype.toString)
+      return a.toString() === b.toString();
 
     // eslint-disable-next-line prefer-const
     keys = Object.keys(a);
     length = keys.length;
     if (length !== Object.keys(b).length) return false;
 
-    for (i = length; i-- !== 0; ) if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
+    for (i = length; i-- !== 0; )
+      if (!Object.prototype.hasOwnProperty.call(b, keys[i])) return false;
     // END: fast-deep-equal
 
     // START: react-fast-compare
@@ -69,7 +76,10 @@ function equal(a: any, b: any) {
 
     // custom handling for React/Preact
     for (i = length; i-- !== 0; ) {
-      if ((keys[i] === "_owner" || keys[i] === "__v" || keys[i] === "__o") && a.$$typeof) {
+      if (
+        (keys[i] === "_owner" || keys[i] === "__v" || keys[i] === "__o") &&
+        a.$$typeof
+      ) {
         // React-specific: avoid traversing React elements' _owner
         // Preact-specific: avoid traversing Preact elements' __v and __o
         //    __v = $_original / $_vnode

@@ -30,15 +30,16 @@ export function useObserver<T>(
 
   useEffect(() => {
     const fn = () => {
-      let needUpdate = false;
       const list = memo(data.val);
+      let needUpdate = !isEqual(list, ref.current);
 
-      for (let i = 0; i < list.length; i++) {
-        if (!isEqual(list[i], ref.current[i])) {
-          needUpdate = true;
-          break;
-        }
-      }
+      // for (let i = 0; i < list.length; i++) {
+      //   if (list[i] !== ref.current[i]) {
+      //     needUpdate = true;
+      //     break;
+      //   }
+      // }
+
       ref.current = list;
       if (needUpdate) {
         setState({ ...data.val });
