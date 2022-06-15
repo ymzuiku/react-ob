@@ -25,7 +25,7 @@ export function useObserver<T>(
   data: ObControl<T>,
   memo: (s: T) => unknown[]
 ): T {
-  const [nextState, setState] = useState(data.val);
+  const [state, setState] = useState(data.val);
   const ref = useRef(memo(data.val));
 
   useEffect(() => {
@@ -51,7 +51,7 @@ export function useObserver<T>(
     };
   }, []);
 
-  return nextState;
+  return state;
 }
 
 export function Consumer<T>({ data, children, memo }: ConsumerProps<T>) {
