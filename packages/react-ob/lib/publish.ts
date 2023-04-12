@@ -1,12 +1,15 @@
-let timer: NodeJS.Timeout | null = null;
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+let timer: any | null = null;
 export function publish() {
   if (timer) {
     clearTimeout(timer);
     timer = null;
   }
   timer = setTimeout(() => {
-    publish.fn();
+    publish.update();
   }, 16);
 }
 
-publish.fn = () => {};
+publish.update = () => {};
+publish.forceUpdate = () => {};

@@ -4,6 +4,7 @@ import {
   Ob,
   ObProvider,
   channelWithStorage,
+  publish,
   useChannel,
 } from "react-ob";
 
@@ -77,6 +78,7 @@ export function Example() {
         <button onClick={() => value.set(value() + 1)}>add value</button>
         <button onClick={() => num.set(num() + 1)}>add num</button>
         <button onClick={() => num.set(5)}>add clear num</button>
+        <button onClick={() => publish.forceUpdate()}>forceUpdate</button>
         <UserPage />
         <UserSettingPage />
       </div>

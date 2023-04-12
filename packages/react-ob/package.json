@@ -1,7 +1,7 @@
 {
   "name": "react-ob",
   "private": false,
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "esm/index.js",
   "types": "lib/index.ts",
   "exports": {
