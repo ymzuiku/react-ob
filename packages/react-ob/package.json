@@ -1,0 +1,33 @@
+{
+  "name": "react-ob",
+  "private": false,
+  "version": "3.0.0",
+  "main": "esm/index.js",
+  "types": "lib/index.ts",
+  "exports": {
+    "import": "./esm/index.js",
+    "require": "./cjs/index.js"
+  },
+  "scripts": {
+    "esm": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=esm --target=es6  --bundle --external:react --format=esm --minify --splitting",
+    "cjs": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=cjs --target=es6  --bundle --external:react --format=cjs --minify",
+    "build": "yarn esm && yarn cjs"
+  },
+  "peerDependencies": {
+    "react": "17.x || 18.x"
+  },
+  "devDependencies": {
+    "@types/react": "^18.0.18",
+    "@types/react-dom": "^18.0.6",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ymzuiku/react-ob.git"
+  },
+  "bugs": {
+    "url": "git+https://github.com/ymzuiku/react-ob.git"
+  },
+  "homepage": "git+https://github.com/ymzuiku/react-ob.git"
+}

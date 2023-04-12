@@ -1,34 +1,7 @@
 {
   "name": "react-ob",
-  "version": "2.2.7",
-  "main": "umd/index.js",
-  "types": "lib/index.ts",
-  "exports": {
-    "import": "./esm/index.js",
-    "require": "./cjs/index.js"
-  },
-  "resolutions": {
-    "react": "17.0.2"
-  },
-  "private": false,
   "scripts": {
-    "esm": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=esm --target=es6  --bundle --inject:./react-shim.js --external:react --format=esm --minify --splitting",
-    "cjs": "esbuild --define:process.env.NODE_ENV=\\\"production\\\" lib/index.ts --outdir=cjs --target=es6  --bundle --inject:./react-shim.js --external:react --format=cjs --minify",
-    "build": "yarn esm && yarn cjs"
-  },
-  "devDependencies": {
-    "@types/fs-extra": "^9.0.13",
-    "@types/react": "^18.0.10",
-    "react": "^18.1.0",
-    "tslib": "^2.3.1",
-    "typescript": "^4.6.3"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ymzuiku/react-ob.git"
-  },
-  "bugs": {
-    "url": "git+https://github.com/ymzuiku/react-ob.git"
-  },
-  "homepage": "git+https://github.com/ymzuiku/react-ob.git"
+    "dev": "pnpm -C packages/example dev",
+    "build": "pnpm -C packages/react-ob build"
+  }
 }
