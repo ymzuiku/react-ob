@@ -1,28 +1,26 @@
-# only-subscribe
+# react-ob
 
-Only use subscribe do react state
+Only use observer do react state, only 0.4kb in gzip.
 
 ## start
 
-1. Add `SubscribeProvider` in App.tsx
+1. Add `ObProvider` in App.tsx
 
 ```jsx
-<SubscribeProvider>
+<ObProvider>
   <App />
-</SubscribeProvider>
+</ObProvider>
 ```
 
-2. Use `channel` and `Subscribe` in Page
+2. Use `useChannel` and `Ob` in Page
 
 ```jsx
 function Page() {
-  const value = useRef(channel(10)).current;
+  const value = useChannel(0);
 
   return (
     <div>
-      <Subscribe channels={[value]}>
-        {(value) => <div>num: {value}</div>}
-      </Subscribe>
+      <Ob channels={[value]}>{(value) => <div>num: {value}</div>}</Ob>
       <button onClick={() => value.set(value() + 1)}></button>
     </div>
   );
@@ -37,7 +35,7 @@ const name = channel("");
 function UserPage() {
   return (
     <Subscribe channels={[name]}>
-      {(name) => <div>User name: {name}</div>}
+      {(_name) => <div>User name: {_name}</div>}
     </Subscribe>
   );
 }
@@ -60,7 +58,7 @@ const name = channelWithStorage("user-name", "");
 function UserPage() {
   return (
     <Subscribe channels={[name]}>
-      {(name) => <div>User name: {name}</div>}
+      {(_name) => <div>User name: {_name}</div>}
     </Subscribe>
   );
 }

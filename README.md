@@ -35,7 +35,7 @@ const name = channel("");
 function UserPage() {
   return (
     <Subscribe channels={[name]}>
-      {(name) => <div>User name: {name}</div>}
+      {(_name) => <div>User name: {_name}</div>}
     </Subscribe>
   );
 }
@@ -58,7 +58,7 @@ const name = channelWithStorage("user-name", "");
 function UserPage() {
   return (
     <Subscribe channels={[name]}>
-      {(name) => <div>User name: {name}</div>}
+      {(_name) => <div>User name: {_name}</div>}
     </Subscribe>
   );
 }
